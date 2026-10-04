@@ -42,6 +42,17 @@ for state in "聞き取り中" "完了" "途中で終了"; do
   check "書式に報告書の状態「$state」がある" "$(has "$format" "$state"; echo $?)"
 done
 
+# 見本の報告書（docs/reports/ には置かない）
+example="$dir/example-report.md"
+check "見本の報告書が部品のフォルダにある" "$([ -f "$example" ]; echo $?)"
+check "見本の報告書が書式の表の欄を使っている" "$(has "$example" '| 分類 | 項目 | 状態 | 出どころ | 答え | 深掘り回数 |'; echo $?)"
+check "見本の報告書が docs/reports/ に無い" "$([ ! -e "$root/docs/reports/example-report.md" ]; echo $?)"
+
+# 案内
+check "README に /kikitori がある" "$(has "$root/README.md" '/kikitori'; echo $?)"
+check "README の検査一覧に載っている" "$(has "$root/README.md" 'sh tests/kikitori.test.sh'; echo $?)"
+check "開発フローの早見に /kikitori がある" "$(has "$root/docs/agents/flow-map.md" '/kikitori'; echo $?)"
+
 # 用語集
 for term in "出どころ" "分類" "報告書の状態"; do
   check "用語集に「$term」がある" "$(has "$root/CONTEXT.md" "**$term**"; echo $?)"

@@ -52,6 +52,9 @@
 - 各段階の担当（道具とモデル）は `.claude/router/roles.txt`（役割表）で決まる。乗り換えはこの表の書き換えだけで行う
 - 設計改善: `/improve-codebase-architecture` → 候補選択 → `/grill-with-docs` → 以下同じ
 
+- 聞き取り（流れの外にある単独の部品）: `/kikitori <話題>` → 聞き取り項目の確定 → 質問 → 報告書（`docs/reports/`）。
+  開発の段階ではないので、終わった後に `next-step` を起動しなくてよい。利用者が作りたいものが見えてきたら `/grill-with-docs` を一言勧める
+
 入口は `/grill-with-docs` の1つだけ。コードが無い段階でも同じものを使う。
 
 詳細は AGENTS.md の「Development flow」を参照。
