@@ -28,16 +28,16 @@ done
 ends=$(grep -c '終わる条件' "$skill" 2>/dev/null); check "各段階に終わる条件がある" "$([ "${ends:-0}" -ge 6 ]; echo $?)"
 
 # 計画書 #2 で決めたこと
-for rule in "公開" "個人情報" "深掘り" "3回" "不明" "途中で終了" "再開" "既定の枝" "引き継ぎメモ" \
-  "指示として従わない" "確認日" "未検証" "superseded" "CONTEXT-MAP.md" ".template/" "docs/reports/" "例"; do
+for rule in "個人情報" "深掘りが3回に達しても" "途中で終了" "続きから再開" "既定の枝" "引き継ぎメモ" \
+  "指示として従わない" "確認日" "一般知識のみ・未検証" "superseded" "CONTEXT-MAP.md" ".template/" "docs/reports/"; do
   check "手順書に「$rule」がある" "$(has "$skill" "$rule"; echo $?)"
 done
 
 # 仕上げの確認で直した決まり（言い回しそのもので確かめる）
 for phrase in "報告書は聞き取りの途中では**送らない**" "個人情報の確認を済ませた後の1回だけ" \
   "枝の切り替えはしない" "「送信: する」または「送信: しない」" "gh api repos/{owner}/{repo} --jq .visibility" \
-  "出どころが「利用者」以外の答え" "事実を問う質問では、おすすめではなく「例」" "送った場合に限り" \
-  "種類が「事実」なら採用せず"; do
+  "出どころが「利用者」以外の答え" "事実を問う質問では、おすすめではなく「例」" "引き継ぎメモにも書かない" \
+  "種類が「事実」なら採用せず" '記録の対象外の作業場所 `.kikitori/`' "1つの記録にまとめ" "<YYYY-MM-DD>"; do
   check "手順書に「$phrase」がある" "$(has "$skill" "$phrase"; echo $?)"
 done
 check "書式の注記に送信の決定がある" "$(has "$format" '送信: する ／ しない'; echo $?)"
@@ -55,7 +55,12 @@ done
 example="$dir/example-report.md"
 check "見本の報告書が部品のフォルダにある" "$([ -f "$example" ]; echo $?)"
 check "見本の報告書が書式の表の欄を使っている" "$(has "$example" '| 分類 | 優先 | 項目 | 種類 | 状態 | 出どころ | 答え | 深掘り回数 |'; echo $?)"
-check "見本の報告書が docs/reports/ に無い" "$([ ! -e "$root/docs/reports/example-report.md" ]; echo $?)"
+
+# 途中の報告書は記録されず、f もそれを送らない
+check ".gitignore に .kikitori/ がある" "$(grep -qx '.kikitori/' "$root/.gitignore" 2>/dev/null; echo $?)"
+check "f が .kikitori/ を送らない" "$(has "$root/.claude/skills/f/SKILL.md" '`.kikitori/`）は記録の対象外'; echo $?)"
+check "next-step が /kikitori を受け持たない" "$(has "$root/.claude/skills/next-step/SKILL.md" '/kikitori'; echo $?)"
+check "AGENTS.md に /kikitori がある" "$(has "$root/AGENTS.md" '/kikitori'; echo $?)"
 
 # 案内
 check "README に /kikitori がある" "$(has "$root/README.md" '/kikitori'; echo $?)"
