@@ -33,11 +33,20 @@ for rule in "公開" "個人情報" "深掘り" "3回" "不明" "途中で終了
   check "手順書に「$rule」がある" "$(has "$skill" "$rule"; echo $?)"
 done
 
+# 仕上げの確認で直した決まり（言い回しそのもので確かめる）
+for phrase in "報告書は聞き取りの途中では**送らない**" "個人情報の確認を済ませた後の1回だけ" \
+  "枝の切り替えはしない" "「送信: する」または「送信: しない」" "gh api repos/{owner}/{repo} --jq .visibility" \
+  "出どころが「利用者」以外の答え" "事実を問う質問では、おすすめではなく「例」" "送った場合に限り" \
+  "種類が「事実」なら採用せず"; do
+  check "手順書に「$phrase」がある" "$(has "$skill" "$phrase"; echo $?)"
+done
+check "書式の注記に送信の決定がある" "$(has "$format" '送信: する ／ しない'; echo $?)"
+
 # 報告書の書式の必須の節と、表の欄
 for section in "報告書の状態" "話題" "日付" "要約" "聞き取り項目" "不明な点" "次に確認すべきこと" "情報源" "注記"; do
   check "書式に「$section」がある" "$(has "$format" "$section"; echo $?)"
 done
-check "書式の表の欄がそろっている" "$(has "$format" '| 分類 | 項目 | 状態 | 出どころ | 答え | 深掘り回数 |'; echo $?)"
+check "書式の表の欄がそろっている" "$(has "$format" '| 分類 | 優先 | 項目 | 種類 | 状態 | 出どころ | 答え | 深掘り回数 |'; echo $?)"
 for state in "聞き取り中" "完了" "途中で終了"; do
   check "書式に報告書の状態「$state」がある" "$(has "$format" "$state"; echo $?)"
 done
@@ -45,7 +54,7 @@ done
 # 見本の報告書（docs/reports/ には置かない）
 example="$dir/example-report.md"
 check "見本の報告書が部品のフォルダにある" "$([ -f "$example" ]; echo $?)"
-check "見本の報告書が書式の表の欄を使っている" "$(has "$example" '| 分類 | 項目 | 状態 | 出どころ | 答え | 深掘り回数 |'; echo $?)"
+check "見本の報告書が書式の表の欄を使っている" "$(has "$example" '| 分類 | 優先 | 項目 | 種類 | 状態 | 出どころ | 答え | 深掘り回数 |'; echo $?)"
 check "見本の報告書が docs/reports/ に無い" "$([ ! -e "$root/docs/reports/example-report.md" ]; echo $?)"
 
 # 案内
@@ -54,7 +63,7 @@ check "README の検査一覧に載っている" "$(has "$root/README.md" 'sh te
 check "開発フローの早見に /kikitori がある" "$(has "$root/docs/agents/flow-map.md" '/kikitori'; echo $?)"
 
 # 用語集
-for term in "出どころ" "分類" "報告書の状態"; do
+for term in "出どころ" "分類" "種類" "報告書の状態"; do
   check "用語集に「$term」がある" "$(has "$root/CONTEXT.md" "**$term**"; echo $?)"
 done
 # 用語集が避けると決めた語を手順書で使っていない
