@@ -1,0 +1,14 @@
+{
+  "name": "rahiseko-tools",
+  "description": "rahiseko-alt が配布する Claude Code の追加機能",
+  "owner": {
+    "name": "rahiseko-alt"
+  },
+  "plugins": [
+    {
+      "name": "kikitori",
+      "source": "./plugins/kikitori",
+      "description": "聞き取りの部品。話題から聞き取り項目を作り、未回答が無くなるまで質問して報告書を残す"
+    }
+  ]
+}
