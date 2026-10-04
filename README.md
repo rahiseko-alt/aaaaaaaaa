@@ -41,6 +41,9 @@ GO / NG を返すときだけです。3社の道具を使うには、先に一�
 | `f` | 環境を破棄しても大丈夫な状態まで片づけ、終了して良いかを報告します |
 | `/next-step` | いまどこにいて、次に何を打てばいいかを1つだけ提示します |
 
+何かについて質問を重ねて考えを整理したいときは、`/kikitori <話題>`（例: `/kikitori 生命保険の商談を記録するアプリを作りたい`）と打ちます。
+業界の論点から聞き取り項目を作って質問を続け、最後に報告書を残します（送ってよいと答えた場合は `docs/reports/` に入れて送ります）。開発の流れとは別に、いつでも単独で使えます。
+
 コマンドを覚える必要はありません。「〇〇を作りたい」と伝えるだけでも、実装前に自動で案内が入ります。
 
 ## 入っているもの
@@ -50,11 +53,12 @@ GO / NG を返すときだけです。3社の道具を使うには、先に一�
   - ユーザー起動（このうち案内で使うもの）: `grill-with-docs` / `to-spec` / `to-tickets` / `implement` / `improve-codebase-architecture` / `setup-matt-pocock-skills`
   - モデル起動: `grilling` / `domain-modeling` / `codebase-design` / `tdd` / `code-review`
 - `.claude/skills/s/`, `.claude/skills/f/`, `.claude/skills/next-step/`: この置き場所独自の案内役と儀式
+- `.claude/skills/kikitori/`: 聞き取りの部品。話題から聞き取り項目を作り、未回答が無くなるまで質問して報告書を残す（開発の流れの外にある単独の部品。見本の報告書は同じフォルダの `example-report.md`）
 - `.claude/skills/conduct/`: 指揮の案内役。相談の後の全段階を、役割表に従って3社の道具に振り分けて進める
 - `.claude/router/`: 振り分け役（`route.sh`）と役割表（`roles.txt`）。モデルの乗り換えは役割表の書き換えだけで行う
 - `.claude/hooks/template-cleanup.sh`: 片づけ役。複製先の最初の会話で、ひな型の作業日誌を片づける
 - `.template/`: ひな型自身の記録（用語集・決めた理由など）。複製先では自動で消える
-- `tests/`: 振り分け役と片づけ役の検査。直したときに `sh tests/route.test.sh` と `sh tests/template-cleanup.test.sh` を流す
+- `tests/`: 振り分け役・片づけ役・聞き取りの部品の検査。直したときに `sh tests/route.test.sh`、`sh tests/template-cleanup.test.sh`、`sh tests/kikitori.test.sh` を流す
 - `docs/setup-windows.md`: Windows での初回準備の手引き
 - `.claude/settings.json`: 会話開始時に `docs/agents/flow-map.md` を読み込む仕組み
 - `docs/agents/flow-map.md`: 進め方と、説明の書き方のルール
