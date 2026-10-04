@@ -59,7 +59,7 @@ check "見本の報告書が書式の表の欄を使っている" "$(has "$examp
 # 途中の報告書は記録されず、f もそれを送らない
 check ".gitignore に .kikitori/ がある" "$(grep -qx '.kikitori/' "$root/.gitignore" 2>/dev/null; echo $?)"
 check "f が .kikitori/ を送らない" "$(has "$root/.claude/skills/f/SKILL.md" '`.kikitori/`）は記録の対象外'; echo $?)"
-check "next-step が /kikitori を受け持たない" "$(has "$root/.claude/skills/next-step/SKILL.md" '/kikitori'; echo $?)"
+check "next-step が /kikitori を受け持たない" "$(has "$root/.claude/skills/next-step/SKILL.md" '`/kikitori` と打った、または「聞き取りをして」と頼んだときは起動しない'; echo $?)"
 check "AGENTS.md に /kikitori がある" "$(has "$root/AGENTS.md" '/kikitori'; echo $?)"
 
 # 案内
