@@ -62,6 +62,11 @@ check "f が .kikitori/ を送らない" "$(has "$root/.claude/skills/f/SKILL.md
 check "next-step が /kikitori を受け持たない" "$(has "$root/.claude/skills/next-step/SKILL.md" '`/kikitori` と打った、または「聞き取りをして」と頼んだときは起動しない'; echo $?)"
 check "AGENTS.md に /kikitori がある" "$(has "$root/AGENTS.md" '/kikitori'; echo $?)"
 
+# 配布用の追加機能（プラグイン）
+check "配布用の手順書が本体と同じ" "$(diff -r "$dir" "$root/plugins/kikitori/skills/kikitori" >/dev/null 2>&1; echo $?)"
+check "配布用の設定ファイルがある" "$([ -f "$root/plugins/kikitori/.claude-plugin/plugin.json" ] && [ -f "$root/.claude-plugin/marketplace.json" ]; echo $?)"
+check "git の下に無い場合の扱いがある" "$(has "$skill" 'git rev-parse --is-inside-work-tree'; echo $?)"
+
 # 案内
 check "README に /kikitori がある" "$(has "$root/README.md" '/kikitori'; echo $?)"
 check "README の検査一覧に載っている" "$(has "$root/README.md" 'sh tests/kikitori.test.sh'; echo $?)"

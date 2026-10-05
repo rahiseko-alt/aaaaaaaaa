@@ -44,6 +44,18 @@ GO / NG を返すときだけです。3社の道具を使うには、先に一�
 何かについて質問を重ねて考えを整理したいときは、`/kikitori <話題>`（例: `/kikitori 生命保険の商談を記録するアプリを作りたい`）と打ちます。
 業界の論点から聞き取り項目を作って質問を続け、最後に報告書を残します（送ってよいと答えた場合は `docs/reports/` に入れて送ります）。開発の流れとは別に、いつでも単独で使えます。
 
+### お客様に `/kikitori` を使ってもらう
+
+お客様の Claude Code で、次の2行を打ってもらいます（この置き場所は公開なので、誰でも入れられます）。
+
+```
+/plugin marketplace add rahiseko-alt/aaaaaaaaa
+/plugin install kikitori@rahiseko-tools
+```
+
+入れた後は、どのフォルダでも `/kikitori:kikitori <話題>` で始まります。報告書はお客様の作業フォルダに残り、こちらには届きません。
+配布用の中身は `plugins/kikitori/` にあり、`.claude/skills/kikitori/` と同じものを置きます（`sh tests/kikitori.test.sh` が食い違いを見つけます）。直したら両方を更新し、`plugins/kikitori/.claude-plugin/plugin.json` の `version` を上げてください。
+
 コマンドを覚える必要はありません。「〇〇を作りたい」と伝えるだけでも、実装前に自動で案内が入ります。
 
 ## 入っているもの
