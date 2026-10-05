@@ -4,6 +4,23 @@ handover.md の保存上限（5 件）を超えて押し出された古いメモ
 会話開始時には読み込まれない。過去の経緯を掘り返すときだけ開く。新しいものを一番上に来るよう足す。
 
 ---
+## 2026-10-04 /kikitori を配布用の追加機能（プラグイン）にした
+
+**決めたこと**
+
+- お客様は Claude Code で `/plugin marketplace add rahiseko-alt/aaaaaaaaa` と `/plugin install kikitori@rahiseko-tools` の2行で入れ、`/kikitori:kikitori <話題>` で使う
+- 配布用の中身は `plugins/kikitori/`。`.claude/skills/kikitori/` と同じものを置き、検査で食い違いを見つける。直したら `version` を上げる
+- git の下に無い作業フォルダでは送らず、報告書を `docs/reports/` に保存だけする
+
+**次にやること**
+
+- 本流へ取り込み済み（PR #9）。GitHub からお客様と同じ手順で入れられることを確認済み
+- お客様にはターミナルで1行（README の「お客様に `/kikitori` を使ってもらう」）を実行してもらい、Claude Code で `/kikitori:kikitori 話題` と送ってもらう。Claude に入れさせる方式は自動モードの安全判定で止まるため取りやめた
+
+**未解決の問題**
+
+- 実際の聞き取りを通しで動かした確認はまだ
+
 ## 2026-10-04 /kikitori の最終確認で GO、本流へ取り込み
 
 **決めたこと**
