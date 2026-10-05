@@ -31,7 +31,7 @@ check "独自の18項目のファイルが無い" "$([ ! -e "$dir/AGENCY-ITEMS.m
 
 # 最初の設定だけ固定（docs/adr/0004）
 check "最初の設定の節がある" "$(has "$skill" '## 最初の設定（固定）'; echo $?)"
-for phrase in "生命保険代理店で、営業（いま答えている人）から" "案件の進み具合" "お客様情報" "利用者には入力させない"; do
+for phrase in "生命保険代理店で、営業（いま答えている人）から" "案件の進み具合" "お客様情報" "利用者には入力させない" "営業を誘導しない" "引き継げる記録" "何回目の面談か" "お客様が実際に言った言葉"; do
   check "最初の設定に「$phrase」がある" "$(has "$skill" "$phrase"; echo $?)"
 done
 
@@ -52,10 +52,11 @@ for phrase in "意図しない送信なら『拒否』を押してください" 
 done
 
 # 報告書の書式（集計用の欄）
-for key in "営業:" "商談日:" "お客様区分:" "段階:" "見込み度:" "成約予定月:" "次回日程:"; do
+for key in "営業:" "商談日:" "お客様区分:" "関係:" "面談回数:" "段階:" "見込み度:" "成約予定月:" "次回日程:"; do
   check "書式に集計用の欄「$key」がある" "$(has "$format" "$key"; echo $?)"
   check "見本に集計用の欄「$key」がある" "$(has "$dir/example-report.md" "$key"; echo $?)"
 done
+check "書式に引き継ぎの節がある" "$(has "$format" "## 引き継ぎの勘所" && has "$format" "## 今回の会話"; echo $?)"
 check "書式の表の欄がそろっている" "$(has "$format" '| 論点 | 答え | 出どころ |'; echo $?)"
 check "見本の表の欄がそろっている" "$(has "$dir/example-report.md" '| 論点 | 答え | 出どころ |'; echo $?)"
 
