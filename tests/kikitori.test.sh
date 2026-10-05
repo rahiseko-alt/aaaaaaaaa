@@ -36,10 +36,12 @@ for phrase in "生命保険代理店で、営業（いま答えている人）�
 done
 
 # 送ることの決まり
-for phrase in "個人情報の確認を済ませた後の1回だけ" "git add -- <ファイル>" "ほかのファイルは記録に含めない" \
-  "調べられなければ、聞かずに「送信: しない」" "全文を会話にも表示する" "gh api repos/{owner}/{repo} --jq .visibility" \
-  "git rev-parse --is-inside-work-tree" "報告書の中身を、引き継ぎメモなど報告書の外の記録に書き写さない" "Skill ツールで見つからなければ"; do
+for phrase in "報告書は**送らない**" "記録（git commit）も送信（push）もしない" "では、今から聞き取りを始めます。" \
+  "git rev-parse --is-inside-work-tree" "全文を会話にも表示する" "報告書の中身を、引き継ぎメモなど報告書の外の記録に書き写さない" "Skill ツールで見つからなければ"; do
   check "手順書に「$phrase」がある" "$(has "$skill" "$phrase"; echo $?)"
+done
+for own in "送信: する" "gh api" "送ってよいですか"; do
+  check "手順書に送る道が残っていない「$own」" "$(has "$skill" "$own" && echo 1 || echo 0)"
 done
 for phrase in "意向把握の書面:" "重要事項の説明:" "払込方法:" "年払いは12で割って" "予定保険料の確度:" "半角数字だけ" "見込み度の目安" "段階の目安" "推測は書かない" "未回答の数＝" "不明の数＝" "## 約束と宿題" "## いま入っている保険" "推測で足さない"; do
   check "書式に「$phrase」がある" "$(has "$format" "$phrase"; echo $?)"
@@ -47,9 +49,10 @@ done
 for own in "docs/adr/" "CONTEXT.md" "利用者に頼まれても変えない"; do
   check "手順書が配布先に無いものや利用者を締め出す文を含まない「$own」" "$(has "$skill" "$own" && echo 1 || echo 0)"
 done
-for phrase in "意図しない送信なら『拒否』を押してください" "上書きせず、すでにあるものを使ってください" "は使わない" "上書きしてよいか私に聞いてください" "ほかのファイルは記録に含めないでください" "記録待ちのファイルがあれば、止めて私に聞いてください" "送り先の枝は、この作業環境の決まりに従ってください"; do
+for phrase in "記録（git commit）も送信（push）もしないでください" "上書きせず、すでにあるものを使ってください" "上書きしてよいか私に聞いてください" "の1行を足してください"; do
   check "貼る文章に「$phrase」がある" "$(has "$root/kit/install-prompt.md" "$phrase"; echo $?)"
 done
+check "貼る文章が push させない" "$(sed -n '1,/【ファイル1】/p' "$root/kit/install-prompt.md" | grep -q 'してください。.*push' && echo 1 || echo 0)"
 
 # 報告書の書式（集計用の欄）
 for key in "営業:" "商談日:" "お客様区分:" "関係:" "面談回数:" "段階:" "見込み度:" "成約予定月:" "次回日程:"; do
@@ -82,8 +85,8 @@ check "zip の手順書が本体と同じ" "$(unzip -p "$root/dist/kikitori-kit.
 check "配布用の設定ファイルがある" "$([ -f "$root/plugins/kikitori/.claude-plugin/plugin.json" ] && [ -f "$root/.claude-plugin/marketplace.json" ]; echo $?)"
 
 # ほかの部品との取り合い
-check ".gitignore に .kikitori/ がある" "$(grep -qx '.kikitori/' "$root/.gitignore" 2>/dev/null; echo $?)"
-check "f が .kikitori/ を送らない" "$(has "$root/.claude/skills/f/SKILL.md" '`.kikitori/`）は記録の対象外'; echo $?)"
+check ".gitignore に docs/reports/ がある" "$(grep -qx 'docs/reports/' "$root/.gitignore" 2>/dev/null; echo $?)"
+check "f が報告書を送らない" "$(has "$root/.claude/skills/f/SKILL.md" '`docs/reports/`）は記録の対象外'; echo $?)"
 check "next-step が /kikitori を受け持たない" "$(has "$root/.claude/skills/next-step/SKILL.md" '`/kikitori` と打った、または「聞き取りをして」と頼んだときは起動しない'; echo $?)"
 check "AGENTS.md に /kikitori がある" "$(has "$root/AGENTS.md" '/kikitori'; echo $?)"
 check "README の検査一覧に載っている" "$(has "$root/README.md" 'sh tests/kikitori.test.sh'; echo $?)"
