@@ -36,18 +36,18 @@ for phrase in "生命保険代理店で、営業（いま答えている人）�
 done
 
 # 送ることの決まり
-for phrase in "個人情報の確認を済ませた後の1回だけ" "git commit -- <ファイル>" "ほかのファイルは記録に含めない" \
-  "非公開だと分かっている場合だけ『送る』" "全文を会話にも表示する" "gh api repos/{owner}/{repo} --jq .visibility" \
-  "git rev-parse --is-inside-work-tree" "引き継ぎメモなど、この部品の外の記録には書かない" "Skill ツールで見つからなければ"; do
+for phrase in "個人情報の確認を済ませた後の1回だけ" "git add -- <ファイル>" "ほかのファイルは記録に含めない" \
+  "調べられなければ、聞かずに「送信: しない」" "全文を会話にも表示する" "gh api repos/{owner}/{repo} --jq .visibility" \
+  "git rev-parse --is-inside-work-tree" "報告書の中身を、引き継ぎメモなど報告書の外の記録に書き写さない" "Skill ツールで見つからなければ"; do
   check "手順書に「$phrase」がある" "$(has "$skill" "$phrase"; echo $?)"
 done
-for phrase in "おすすめを採用した欄:" "予定保険料の確度:" "半角数字だけ" "見込み度の目安" "段階の目安" "未回答の数＝" "不明の数＝"; do
+for phrase in "おすすめを採用した欄:" "予定保険料の確度:" "半角数字だけ" "見込み度の目安" "段階の目安" "おすすめを採用しても値は「未回答」" "未回答の数＝" "不明の数＝"; do
   check "書式に「$phrase」がある" "$(has "$format" "$phrase"; echo $?)"
 done
 for own in "docs/adr/" "CONTEXT.md" "利用者に頼まれても変えない"; do
   check "手順書が配布先に無いものや利用者を締め出す文を含まない「$own」" "$(has "$skill" "$own" && echo 1 || echo 0)"
 done
-for phrase in "確かめてから『許可』を押してください" "上書きしてよいか私に聞いてください" "ほかのファイルは記録に含めないでください" "記録待ちのファイルがあれば、止めて私に聞いてください" "送り先の枝は、この作業環境の決まりに従ってください"; do
+for phrase in "意図しない送信なら『拒否』を押してください" "上書きせず、すでにあるものを使ってください" "は使わない" "上書きしてよいか私に聞いてください" "ほかのファイルは記録に含めないでください" "記録待ちのファイルがあれば、止めて私に聞いてください" "送り先の枝は、この作業環境の決まりに従ってください"; do
   check "貼る文章に「$phrase」がある" "$(has "$root/kit/install-prompt.md" "$phrase"; echo $?)"
 done
 
