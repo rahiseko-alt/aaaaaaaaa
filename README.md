@@ -46,14 +46,18 @@ GO / NG を返すときだけです。3社の道具を使うには、先に一�
 
 ### お客様に `/kikitori` を使ってもらう
 
-お客様の Claude Code で、次の2行を打ってもらいます（この置き場所は公開なので、誰でも入れられます）。
+お客様には、下の枠の文章を**丸ごと1回**、Claude Code に貼って送ってもらいます。入れるところから聞き取りの開始までが1回で進みます（何度貼っても壊れません）。
 
 ```
-/plugin marketplace add rahiseko-alt/aaaaaaaaa
-/plugin install kikitori@rahiseko-tools
+聞き取りツール kikitori を入れて、聞き取りを始めてください。
+1. シェルで次の2つのコマンドを順に実行してください（すでに入っていても問題ありません）。
+   claude plugin marketplace add rahiseko-alt/aaaaaaaaa
+   claude plugin install kikitori@rahiseko-tools
+2. この会話ではまだ /kikitori:kikitori が使えないことがあります。その場合は、~/.claude/plugins/cache/rahiseko-tools/kikitori/ の下にある skills/kikitori/SKILL.md を読み、その手順どおりに聞き取りを始めてください。
+3. 話題: ここに話題を書く（書かなければ最初に聞いてください）
 ```
 
-入れた後は、どのフォルダでも `/kikitori:kikitori <話題>` で始まります。報告書はお客様の作業フォルダに残り、こちらには届きません。
+2回目からは、Claude Code を開き直せば `/kikitori:kikitori <話題>` で直接始まります。報告書はお客様の作業フォルダに残り、こちらには届きません。
 配布用の中身は `plugins/kikitori/` にあり、`.claude/skills/kikitori/` と同じものを置きます（`sh tests/kikitori.test.sh` が食い違いを見つけます）。直したら両方を更新し、`plugins/kikitori/.claude-plugin/plugin.json` の `version` を上げてください。
 
 コマンドを覚える必要はありません。「〇〇を作りたい」と伝えるだけでも、実装前に自動で案内が入ります。
