@@ -1,9 +1,8 @@
-次の「手順」に、1文字も変えずにそのまま従って、私に聞き取りをしてください。聞き取る対象は「対象」のとおりで固定です。
+---
+name: grilling
+description: Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any 'grill' trigger phrases.
+---
 
-対象:
-生命保険代理店で、営業（私）から、私とお客様との商談の内容を聞き取る。ねらいは、案件の進み具合をつかむことと、お客様情報を漏れなくためること。お客様の名前は伏せ（「法人A社」「40代個人」など）、私は呼び名か社員番号で書く。健康状態・病歴は扱わない。終わったら、決まったことを表にした報告書にまとめ、保存できる環境なら「聞き取り報告書.md」として保存し、できなければ画面に表示する。
-
-手順（mattpocock/skills の grilling。MIT License, Copyright (c) 2026 Matt Pocock）:
 Interview the user relentlessly until you reach a shared understanding. Map this as a **design tree**: every decision branches into the decisions that hang off it.
 
 Work the tree in **rounds**. The **frontier** is every decision whose prerequisites are already settled: the questions you can ask _now_ without guessing at answers you haven't heard yet. Ask the whole frontier in one round: number each question and give your recommended answer. Then wait for the user's answers before the next round.
