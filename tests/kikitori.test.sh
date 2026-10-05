@@ -42,11 +42,26 @@ for phrase in "報告書は聞き取りの途中では**送らない**" "個人�
 done
 check "書式の注記に送信の決定がある" "$(has "$format" '送信: する ／ しない'; echo $?)"
 
+# ロックした設定（docs/adr/0004）
+check "手順書に前提のロックがある" "$(has "$skill" '前提（ロック済み・変えない）'; echo $?)"
+for phrase in "生命保険代理店" "答えるのは**営業**" "外さない・言い換えない" "何件分もまとめて集計"; do
+  check "手順書に「$phrase」がある" "$(has "$skill" "$phrase"; echo $?)"
+done
+items="$dir/AGENCY-ITEMS.md"
+for id in A1 A2 A3 B4 B5 B6 B7 B8 B9 C10 C11 C12 C13 D14 D15 D16 E17 E18; do
+  check "基本項目 $id がある" "$(grep -q "^- $id\. " "$items" 2>/dev/null; echo $?)"
+done
+for key in "営業:" "商談日:" "お客様区分:" "結果:" "見込み度:" "意向把握の記録:" "不明の数:" "未回答の数:"; do
+  check "書式に集計用の欄「$key」がある" "$(has "$format" "$key"; echo $?)"
+  check "見本に集計用の欄「$key」がある" "$(has "$dir/example-report.md" "$key"; echo $?)"
+done
+check "ロックの決定記録がある" "$([ -f "$root/docs/adr/0004-lock-life-agency-sales-interview.md" ]; echo $?)"
+
 # 報告書の書式の必須の節と、表の欄
 for section in "報告書の状態" "話題" "日付" "要約" "聞き取り項目" "不明な点" "次に確認すべきこと" "情報源" "注記"; do
   check "書式に「$section」がある" "$(has "$format" "$section"; echo $?)"
 done
-check "書式の表の欄がそろっている" "$(has "$format" '| 分類 | 優先 | 項目 | 種類 | 状態 | 出どころ | 答え | 深掘り回数 |'; echo $?)"
+check "書式の表の欄がそろっている" "$(has "$format" '| ID | 分類 | 優先 | 項目 | 種類 | 状態 | 出どころ | 答え | 深掘り回数 |'; echo $?)"
 for state in "聞き取り中" "完了" "途中で終了"; do
   check "書式に報告書の状態「$state」がある" "$(has "$format" "$state"; echo $?)"
 done
@@ -54,7 +69,7 @@ done
 # 見本の報告書（docs/reports/ には置かない）
 example="$dir/example-report.md"
 check "見本の報告書が部品のフォルダにある" "$([ -f "$example" ]; echo $?)"
-check "見本の報告書が書式の表の欄を使っている" "$(has "$example" '| 分類 | 優先 | 項目 | 種類 | 状態 | 出どころ | 答え | 深掘り回数 |'; echo $?)"
+check "見本の報告書が書式の表の欄を使っている" "$(has "$example" '| ID | 分類 | 優先 | 項目 | 種類 | 状態 | 出どころ | 答え | 深掘り回数 |'; echo $?)"
 
 # 途中の報告書は記録されず、f もそれを送らない
 check ".gitignore に .kikitori/ がある" "$(grep -qx '.kikitori/' "$root/.gitignore" 2>/dev/null; echo $?)"

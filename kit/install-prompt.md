@@ -1,4 +1,4 @@
-保険代理店の商談の聞き取りツール kikitori を、私のパソコンの Claude Code に組み込んで、そのまま聞き取りを始めてください。
+生命保険代理店の、営業向け商談聞き取りツール kikitori を、私のパソコンの Claude Code に組み込んで、そのまま聞き取りを始めてください。
 
 1. 次の3つのファイルを取り寄せて、`~/.claude/skills/kikitori/` フォルダに同じ名前で保存してください（フォルダが無ければ作ってください。すでにあれば上書きで構いません）。
    - https://raw.githubusercontent.com/rahiseko-alt/aaaaaaaaa/main/kit/kikitori-kit/.claude/skills/kikitori/SKILL.md
