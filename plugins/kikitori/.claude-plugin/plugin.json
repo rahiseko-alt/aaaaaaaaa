@@ -1,7 +1,7 @@
 {
   "name": "kikitori",
   "description": "聞き取りの部品。話題から聞き取り項目を作り、未回答が無くなるまで質問して報告書を残す",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "author": {
     "name": "rahiseko-alt"
   }
