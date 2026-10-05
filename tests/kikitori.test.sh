@@ -36,18 +36,18 @@ for phrase in "生命保険代理店で、営業（いま答えている人）�
 done
 
 # 送ることの決まり
-for phrase in "個人情報の確認を済ませた後の1回だけ" "枝は作らない・切り替えない" "ほかのファイルは記録に含めない" \
-  "調べられなければ、聞かずに「送信: しない」" "クラウドの作業環境では、閉じると消えます" "gh api repos/{owner}/{repo} --jq .visibility" \
+for phrase in "個人情報の確認を済ませた後の1回だけ" "git commit -- <ファイル>" "ほかのファイルは記録に含めない" \
+  "非公開だと分かっている場合だけ『送る』" "全文を会話にも表示する" "gh api repos/{owner}/{repo} --jq .visibility" \
   "git rev-parse --is-inside-work-tree" "引き継ぎメモなど、この部品の外の記録には書かない" "Skill ツールで見つからなければ"; do
   check "手順書に「$phrase」がある" "$(has "$skill" "$phrase"; echo $?)"
 done
-for phrase in "おすすめを採用した欄:" "予定保険料の確度:" "半角数字だけ"; do
+for phrase in "おすすめを採用した欄:" "予定保険料の確度:" "半角数字だけ" "見込み度の目安" "段階の目安" "未回答の数＝" "不明の数＝"; do
   check "書式に「$phrase」がある" "$(has "$format" "$phrase"; echo $?)"
 done
 for own in "docs/adr/" "CONTEXT.md" "利用者に頼まれても変えない"; do
   check "手順書が配布先に無いものや利用者を締め出す文を含まない「$own」" "$(has "$skill" "$own" && echo 1 || echo 0)"
 done
-for phrase in "『許可』を押してください" "上書きしてよいか私に聞いてください" "ほかのファイルは記録に含めないでください" "枝は作らない・切り替えないでください"; do
+for phrase in "確かめてから『許可』を押してください" "上書きしてよいか私に聞いてください" "ほかのファイルは記録に含めないでください" "記録待ちのファイルがあれば、止めて私に聞いてください" "送り先の枝は、この作業環境の決まりに従ってください"; do
   check "貼る文章に「$phrase」がある" "$(has "$root/kit/install-prompt.md" "$phrase"; echo $?)"
 done
 
@@ -61,7 +61,7 @@ check "見本の表の欄がそろっている" "$(has "$dir/example-report.md" 
 
 # 配布物に grilling が書き換えずに入っている
 check "配布用フォルダの grilling が元と同じ" "$(diff "$grilling" "$root/kit/kikitori-kit/.claude/skills/grilling/SKILL.md" >/dev/null 2>&1; echo $?)"
-check "配布用フォルダに grilling のライセンスがある" "$(has "$root/kit/kikitori-kit/.claude/skills/grilling/LICENSE" 'MIT License'; echo $?)"
+check "配布用フォルダに grilling のライセンスがある" "$(has "$root/kit/kikitori-kit/.claude/skills/kikitori/GRILLING-LICENSE" 'MIT License'; echo $?)"
 check "追加機能の grilling が元と同じ" "$(diff "$grilling" "$root/plugins/kikitori/skills/grilling/SKILL.md" >/dev/null 2>&1; echo $?)"
 check "zip の grilling が元と同じ" "$(unzip -p "$root/dist/kikitori-kit.zip" kikitori-kit/.claude/skills/grilling/SKILL.md 2>/dev/null | diff - "$grilling" >/dev/null 2>&1; echo $?)"
 prompt="$root/kit/install-prompt.md"
@@ -76,7 +76,7 @@ check "貼る文章が外から取り寄せない" "$(has "$prompt" 'raw.githubu
 
 # 配布物の kikitori が本体と同じ
 check "配布用フォルダの手順書が本体と同じ" "$(diff "$skill" "$root/kit/kikitori-kit/.claude/skills/kikitori/SKILL.md" >/dev/null 2>&1 && diff "$format" "$root/kit/kikitori-kit/.claude/skills/kikitori/REPORT-FORMAT.md" >/dev/null 2>&1; echo $?)"
-check "追加機能の手順書が本体と同じ" "$(diff -r "$dir" "$root/plugins/kikitori/skills/kikitori" >/dev/null 2>&1; echo $?)"
+check "追加機能の手順書が本体と同じ" "$(diff -r -x GRILLING-LICENSE "$dir" "$root/plugins/kikitori/skills/kikitori" >/dev/null 2>&1; echo $?)"
 check "zip の手順書が本体と同じ" "$(unzip -p "$root/dist/kikitori-kit.zip" kikitori-kit/.claude/skills/kikitori/SKILL.md 2>/dev/null | diff - "$skill" >/dev/null 2>&1; echo $?)"
 check "配布用の設定ファイルがある" "$([ -f "$root/plugins/kikitori/.claude-plugin/plugin.json" ] && [ -f "$root/.claude-plugin/marketplace.json" ]; echo $?)"
 
@@ -86,6 +86,7 @@ check "f が .kikitori/ を送らない" "$(has "$root/.claude/skills/f/SKILL.md
 check "next-step が /kikitori を受け持たない" "$(has "$root/.claude/skills/next-step/SKILL.md" '`/kikitori` と打った、または「聞き取りをして」と頼んだときは起動しない'; echo $?)"
 check "AGENTS.md に /kikitori がある" "$(has "$root/AGENTS.md" '/kikitori'; echo $?)"
 check "README の検査一覧に載っている" "$(has "$root/README.md" 'sh tests/kikitori.test.sh'; echo $?)"
+check "grilling の置き場所に手元の追加が無い" "$([ ! -e "$root/kit/kikitori-kit/.claude/skills/grilling/LICENSE" ] && [ ! -e "$root/plugins/kikitori/skills/grilling/LICENSE" ]; echo $?)"
 check "決定記録 0004 と 0005 がある" "$([ -f "$root/docs/adr/0004-lock-life-agency-sales-interview.md" ] && [ -f "$root/docs/adr/0005-use-grilling-verbatim.md" ]; echo $?)"
 
 [ "$fail" -eq 0 ] && echo "すべて通りました" || { echo "失敗があります"; exit 1; }
