@@ -55,8 +55,15 @@ check "配布用フォルダの grilling が元と同じ" "$(diff "$grilling" "$
 check "配布用フォルダに grilling のライセンスがある" "$(has "$root/kit/kikitori-kit/.claude/skills/grilling/LICENSE" 'MIT License'; echo $?)"
 check "追加機能の grilling が元と同じ" "$(diff "$grilling" "$root/plugins/kikitori/skills/grilling/SKILL.md" >/dev/null 2>&1; echo $?)"
 check "zip の grilling が元と同じ" "$(unzip -p "$root/dist/kikitori-kit.zip" kikitori-kit/.claude/skills/grilling/SKILL.md 2>/dev/null | diff - "$grilling" >/dev/null 2>&1; echo $?)"
-check "貼る文章に grilling の本文がそのまま入っている" "$(sed '1,/^---$/d' "$grilling" | sed '1,/^---$/d' | sed '/^$/d' | while IFS= read -r line; do grep -qF -- "$line" "$root/kit/paste-prompt.md" || exit 1; done; echo $?)"
-check "取り寄せ文に grilling がある" "$(has "$root/kit/install-prompt.md" 'skills/grilling/SKILL.md'; echo $?)"
+prompt="$root/kit/install-prompt.md"
+block() { # $1 見出し: 貼る文章から、その見出しのファイルの中身を取り出す
+  awk -v h="【$1】" '$0==h{f=1;next} f&&/^````$/{if(s){exit}else{s=1;next}} f&&s{print}' "$prompt"
+}
+check "貼る文章のファイル1が kikitori の手順書と同じ" "$(block ファイル1 | diff - "$skill" >/dev/null 2>&1; echo $?)"
+check "貼る文章のファイル2が報告書の書式と同じ" "$(block ファイル2 | diff - "$format" >/dev/null 2>&1; echo $?)"
+check "貼る文章のファイル3が grilling と同じ" "$(block ファイル3 | diff - "$grilling" >/dev/null 2>&1; echo $?)"
+check "貼る文章のファイル4がライセンスと同じ" "$(block ファイル4 | diff - "$root/licenses/mattpocock-skills-LICENSE" >/dev/null 2>&1; echo $?)"
+check "貼る文章が外から取り寄せない" "$(has "$prompt" 'raw.githubusercontent.com' && echo 1 || echo 0)"
 
 # 配布物の kikitori が本体と同じ
 check "配布用フォルダの手順書が本体と同じ" "$(diff "$skill" "$root/kit/kikitori-kit/.claude/skills/kikitori/SKILL.md" >/dev/null 2>&1 && diff "$format" "$root/kit/kikitori-kit/.claude/skills/kikitori/REPORT-FORMAT.md" >/dev/null 2>&1; echo $?)"
