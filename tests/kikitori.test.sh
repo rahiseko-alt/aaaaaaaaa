@@ -30,16 +30,25 @@ done
 check "独自の18項目のファイルが無い" "$([ ! -e "$dir/AGENCY-ITEMS.md" ]; echo $?)"
 
 # 最初の設定だけ固定（docs/adr/0004）
-check "最初の設定の節がある" "$(has "$skill" '## 最初の設定（固定・ロック済み）'; echo $?)"
+check "最初の設定の節がある" "$(has "$skill" '## 最初の設定（固定）'; echo $?)"
 for phrase in "生命保険代理店で、営業（いま答えている人）から" "案件の進み具合" "お客様情報" "利用者には入力させない"; do
   check "最初の設定に「$phrase」がある" "$(has "$skill" "$phrase"; echo $?)"
 done
 
 # 送ることの決まり
-for phrase in "報告書は聞き取りの途中では**送らない**" "個人情報の確認を済ませた後の1回だけ" "枝の切り替えはしない" \
-  "「送信: する」または「送信: しない」" "gh api repos/{owner}/{repo} --jq .visibility" '記録の対象外の作業場所 `.kikitori/`' \
-  "git rev-parse --is-inside-work-tree" "引き継ぎメモにも書かない" "1つの記録にまとめ"; do
+for phrase in "個人情報の確認を済ませた後の1回だけ" "枝は作らない・切り替えない" "ほかのファイルは記録に含めない" \
+  "調べられなければ、聞かずに「送信: しない」" "クラウドの作業環境では、閉じると消えます" "gh api repos/{owner}/{repo} --jq .visibility" \
+  "git rev-parse --is-inside-work-tree" "引き継ぎメモなど、この部品の外の記録には書かない" "Skill ツールで見つからなければ"; do
   check "手順書に「$phrase」がある" "$(has "$skill" "$phrase"; echo $?)"
+done
+for phrase in "おすすめを採用した欄:" "予定保険料の確度:" "半角数字だけ"; do
+  check "書式に「$phrase」がある" "$(has "$format" "$phrase"; echo $?)"
+done
+for own in "docs/adr/" "CONTEXT.md" "利用者に頼まれても変えない"; do
+  check "手順書が配布先に無いものや利用者を締め出す文を含まない「$own」" "$(has "$skill" "$own" && echo 1 || echo 0)"
+done
+for phrase in "『許可』を押してください" "上書きしてよいか私に聞いてください" "ほかのファイルは記録に含めないでください" "枝は作らない・切り替えないでください"; do
+  check "貼る文章に「$phrase」がある" "$(has "$root/kit/install-prompt.md" "$phrase"; echo $?)"
 done
 
 # 報告書の書式（集計用の欄）
