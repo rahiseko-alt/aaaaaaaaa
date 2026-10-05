@@ -67,6 +67,13 @@ check "配布用の手順書が本体と同じ" "$(diff -r "$dir" "$root/plugins
 check "配布用の設定ファイルがある" "$([ -f "$root/plugins/kikitori/.claude-plugin/plugin.json" ] && [ -f "$root/.claude-plugin/marketplace.json" ]; echo $?)"
 check "git の下に無い場合の扱いがある" "$(has "$skill" 'git rev-parse --is-inside-work-tree'; echo $?)"
 
+# 配布用フォルダ（kit/kikitori-kit と dist/kikitori-kit.zip）
+kitskill="$root/kit/kikitori-kit/.claude/skills/kikitori"
+check "配布用フォルダの手順書が本体と同じ" "$(diff "$skill" "$kitskill/SKILL.md" >/dev/null 2>&1 && diff "$format" "$kitskill/REPORT-FORMAT.md" >/dev/null 2>&1; echo $?)"
+check "配布用フォルダに説明書がある" "$([ -f "$root/kit/kikitori-kit/README.md" ]; echo $?)"
+check "配布用 zip の手順書が本体と同じ" "$(unzip -p "$root/dist/kikitori-kit.zip" kikitori-kit/.claude/skills/kikitori/SKILL.md 2>/dev/null | diff - "$skill" >/dev/null 2>&1; echo $?)"
+check "配布用 zip の説明書が最新" "$(unzip -p "$root/dist/kikitori-kit.zip" kikitori-kit/README.md 2>/dev/null | diff - "$root/kit/kikitori-kit/README.md" >/dev/null 2>&1; echo $?)"
+
 # 案内
 check "README に /kikitori がある" "$(has "$root/README.md" '/kikitori'; echo $?)"
 check "README の検査一覧に載っている" "$(has "$root/README.md" 'sh tests/kikitori.test.sh'; echo $?)"
