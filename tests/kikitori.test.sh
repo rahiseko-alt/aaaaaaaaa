@@ -44,14 +44,14 @@ check "書式の注記に送信の決定がある" "$(has "$format" '送信: す
 
 # ロックした設定（docs/adr/0004）
 check "手順書に前提のロックがある" "$(has "$skill" '前提（ロック済み・変えない）'; echo $?)"
-for phrase in "生命保険代理店" "答えるのは**営業**" "外さない・言い換えない" "何件分もまとめて集計"; do
+for phrase in "生命保険代理店" "答えるのは**営業**" "外さない・言い換えない" "何件分もまとめて集計" "**案件の進み具合**" "**お客様情報**" "お客様は実際に何と言いましたか"; do
   check "手順書に「$phrase」がある" "$(has "$skill" "$phrase"; echo $?)"
 done
 items="$dir/AGENCY-ITEMS.md"
-for id in A1 A2 A3 B4 B5 B6 B7 B8 B9 C10 C11 C12 C13 D14 D15 D16 E17 E18; do
+for id in P1 P2 P3 P4 P5 P6 P7 P8 P9 P10 K1 K2 K3 K4 K5 K6 K7 K8; do
   check "基本項目 $id がある" "$(grep -q "^- $id\. " "$items" 2>/dev/null; echo $?)"
 done
-for key in "営業:" "商談日:" "お客様区分:" "結果:" "見込み度:" "意向把握の記録:" "不明の数:" "未回答の数:"; do
+for key in "営業:" "商談日:" "お客様区分:" "段階:" "見込み度:" "成約予定月:" "次回日程:" "不明の数:" "未回答の数:"; do
   check "書式に集計用の欄「$key」がある" "$(has "$format" "$key"; echo $?)"
   check "見本に集計用の欄「$key」がある" "$(has "$dir/example-report.md" "$key"; echo $?)"
 done
