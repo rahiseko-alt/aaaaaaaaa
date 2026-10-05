@@ -12,6 +12,7 @@
 
 **決めたこと**
 
+- いちばん簡単な渡し方は、貼るだけで聞き取りが始まる文章 `kit/paste-prompt.md`（入れる作業なし、どの Claude でも動く）。zip はフォルダごと使いたい場合の方法
 - 非エンジニアのお客様には、リンク1つで zip を渡す。展開したフォルダを Claude Code（デスクトップアプリ・VS Code・ターミナル）で開き、`/kikitori 話題` と送るだけ。命令を打つ場面は無い
 - 配布用フォルダは `kit/kikitori-kit/`、zip は `dist/kikitori-kit.zip`。手順書を直したら `sh scripts/build-kit.sh` で作り直す
 - Claude に代わりに入れさせる方式は安全判定で止まるため取りやめ。追加機能（プラグイン）はエンジニア向けに残す
