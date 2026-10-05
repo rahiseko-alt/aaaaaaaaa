@@ -46,17 +46,21 @@ GO / NG を返すときだけです。3社の道具を使うには、先に一�
 
 ### お客様に `/kikitori` を使ってもらう
 
-外から取り寄せる追加機能は、安全のため Claude に代わりに入れさせることはできません（自動モードの安全判定で止まります）。入れる操作だけは、お客様ご本人に行ってもらいます。
+お客様には、次のリンクを送るだけです。命令を打つ場面はありません。
 
-1. Claude Code ではなく、パソコンの「ターミナル」（Windows は「PowerShell」）を開き、次の1行を貼って Enter を押す（何度実行しても壊れません）。
+https://github.com/rahiseko-alt/aaaaaaaaa/raw/main/dist/kikitori-kit.zip
 
-```
-claude plugin marketplace add rahiseko-alt/aaaaaaaaa; claude plugin install kikitori@rahiseko-tools
-```
+お客様の手順（zip の中の `README.md` にも同じことを書いてあります）:
 
-2. Claude Code を開き、`/kikitori:kikitori 話題` と送る（例: `/kikitori:kikitori 生命保険の商談を記録するアプリを作りたい`）。
+1. リンクを押してダウンロードし、zip を展開する（`kikitori-kit` フォルダができる）
+2. そのフォルダを Claude Code で開く（デスクトップアプリ・VS Code・ターミナルのどれでも可。開き方は同梱の説明書）
+3. `/kikitori 話題` と送る
 
-2回目からは、2だけで始まります。報告書はお客様の作業フォルダに残り、こちらには届きません。
+報告書はそのフォルダの `docs/reports/` に残り、こちらには届きません。ブラウザ版の Claude Code では使えません。
+
+手順書（`.claude/skills/kikitori/`）を直したら、`sh scripts/build-kit.sh` で配布用フォルダと zip を作り直してください（`sh tests/kikitori.test.sh` が作り忘れを見つけます）。
+
+エンジニアのお客様には、追加機能（プラグイン）として入れる方法もあります: Claude Code で `/plugin marketplace add rahiseko-alt/aaaaaaaaa` と `/plugin install kikitori@rahiseko-tools` を1行ずつ送り、`/kikitori:kikitori 話題` で使います。
 配布用の中身は `plugins/kikitori/` にあり、`.claude/skills/kikitori/` と同じものを置きます（`sh tests/kikitori.test.sh` が食い違いを見つけます）。直したら両方を更新し、`plugins/kikitori/.claude-plugin/plugin.json` の `version` を上げてください。
 
 コマンドを覚える必要はありません。「〇〇を作りたい」と伝えるだけでも、実装前に自動で案内が入ります。
